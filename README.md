@@ -7,4 +7,8 @@
 - [ナミナミ　きゃぴVer](https://tom2rd.sakura.ne.jp/hanakotech/kyun/nami.html)
 - [トミトミ　Ver](https://tom2rd.sakura.ne.jp/hanakotech/kyun/index.html)
 
+Github pagesで動かしてみる。
+
+https://tom2rd.github.io/kyunkyun/
+
 
