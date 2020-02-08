@@ -55,11 +55,20 @@ while ($CurrentTime < $nowTime)
     $CurrentTime = $CurrentTime + 1;
 }
 
+// 現在のカウンタは過去5秒分の合計
 $NowCnt=0;
-$NowTimeCount = $xml->xpath('/Counter/Sec/TimeCount[@Time="'.$CurrentTime.'"]');
-if(count($NowTimeCount) > 0 )
+$CurrentTime = $nowTime - 5;
+while($CurrentTime <= $nowTime)
 {
-    $NowCnt = (int)$NowTimeCount[0]["Value"];
+    $NowTimeCount = $xml->xpath('/Counter/Sec/TimeCount[@Time="'.$CurrentTime.'"]');
+    if(count($NowTimeCount) > 0 )
+    {        // Indexが合っていてもTimeが違う場合は、過去のデータなので0扱いにする。
+        if((int)$NowTimeCount[0]["Time"] == $CurrentTime)
+        {
+            $NowCnt = $NowCnt+(int)$NowTimeCount[0]["Value"];
+        }
+    }    
+    $CurrentTime = $CurrentTime + 1;
 }
 
 $DayIndex = date('Ymd') ;           // 日付
