@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
+        <script src="js/epoch.min.js"></script>
+        
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="css/epoch.min.css">
+        <link rel="stylesheet" type="text/css" href="css/kyunkyun.css">
+    </head>
+    <body>
+       
+        <P>今のキュンキュン数</P>
+        <div id="gaugeChart" class="epoch gauge-small"></div>
+        <P>本日のキュンキュン</P>
+        <div id="gaugeChart_Daily" class="epoch gauge-small"></div>
+
+        <!-- Test 3 -->
+        <div id="kyunGraph" class="kyunGraph">
+            <div class="epoch"></div>
+            <p><button>きゅんきゅん</button></p>
+        </div>
+     
+        <script>
+   
+        //　初期設定
+        $(function() 
+        {
+            var currentTime = parseInt(new Date().getTime() / (1000 * 5)) * 5;
+            var LastTime = 0;
+            var chart;
+            var gauge;
+            var gauge_Daily;
+            $.post("load.php",{},
+            function(data)
+            {
+                var leftRange = [0, 50];
+                var initData = [{ label: 'A', values: data.values, range: leftRange }];
+                LastTime = data.ServerTime;
+                
+                chart = $('#kyunGraph .epoch').epoch({
+                        type: 'time.line',
+                        range: {
+                            left: leftRange
+                        },
+                        data: initData,
+                        axes: ['left', 'right', 'bottom']
+                        });  
+
+                gauge = $('#gaugeChart').epoch({
+                    type: 'time.gauge',
+                    domain: [0, 50],
+                    format: function(v) { return parseInt(v) + ' cun'; },
+                    value: 0
+                    });
+                gauge_Daily = $('#gaugeChart_Daily').epoch({
+                    type: 'time.gauge',
+                    domain: [0, 200],
+                    format: function(v) { return parseInt(v) + ' cun'; },
+                    value: 0
+                    });
+                        
+                interval = setInterval(pushPoint, 1000);
+            });
+
+
+            var pushPoint = function() 
+            {
+                $.get("load.php",{LastTime : LastTime},
+                function(data)
+                {
+                    LastTime = data.ServerTime;
+                    for( let idx in data.values)
+                    {
+                        //chart.push();
+                        chart.push([data.values[idx]]);
+
+                    }
+
+                    gauge.update(data.NowCount);
+
+                    gauge_Daily.update(data.DayCount);
+                });
+            };
+
+            $('#kyunGraph button').on('click', function(e) {
+                $.post('countup.php',{},{});
+
+            });
+        });
+        </script>
+
+    </body>
+</html>
