@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
+        <script src="js/epoch.min.js"></script>
+        
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="css/epoch.min.css">
+        <link rel="stylesheet" type="text/css" href="css/kyunkyun.css">
+        <style>
+            .wrap{
+                display: flex;
+                flex-wrap: wrap;
+            }
+            .Block{
+                width: 300px;
+            padding:  20px;             /* 余白指定 */
+            vertical-align:  top;       /* 要素を上揃えにする */ 
+            }
+            .LineChart{
+                width: 600px;
+            padding:  20px;             /* 余白指定 */
+            vertical-align:  top;       /* 要素を上揃えにする */ 
+            }
+            
+            .QnnQnnbutton {
+            display: inline-block;
+            padding: .65em 4em;
+            background: -webkit-linear-gradient(#fe5f95 , #ff3f7f);
+            background: linear-gradient(#fe5f95 , #ff3f7f);
+            border: 1px solid #fe3276;
+            border-radius: 4px;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            -webkit-transition: .3s ease-in-out;
+            transition: .3s ease-in-out;
+            }
+            .QnnQnnbutton:active {
+            -webkit-animation: bounce 2s ease-in-out;
+            animation: bounce 2s ease-in-out;
+            }
+            @-webkit-keyframes bounce {
+            5%  { -webkit-transform: scale(1.1, .8); }
+            10% { -webkit-transform: scale(.8, 1.1) translateY(-5px); }
+            15% { -webkit-transform: scale(1, 1); }
+            }
+            @keyframes bounce {
+            5%  { transform: scale(1.1, .8); }
+            10% { transform: scale(.8, 1.1) translateY(-5px); }
+            15% { transform: scale(1, 1); }
+            }
+
+             </style>
+    </head>
+    <body>
+
+        <!-- テキストボタンの場合 -->
+        <P onClick="sound()">
+            <A class="QnnQnnbutton" id="QnnQnnbutton" href="#" >きゅんきゅん</A>
+        </P>
+        
+    
+        <div id="sound-file"　class="audio">
+            <audio src="audio/hee.mp3" id="heeAudio"><p>audio 要素に対応したブラウザでは「へぇ」の音声ファイルの再生が可能です。</p></audio>
+        </div>
+
+        <div class="wrap">
+            <div class="gauge">
+                <P>今のキュンキュン数</P>
+                <div id="gaugeChart" class="epoch gauge-small"></div>
+               </div>
+               <div class="gauge">
+                <P>本日のキュンキュン</P>
+                <div id="gaugeChart_Daily" class="epoch gauge-small"></div>
+               </div>
+        
+                <!-- Test 3 -->
+                <div class="LineChart">
+                    <div id="kyunGraph" class="kyunGraph">
+                        <div class="epoch"></div>
+                        <p><button>きゅんきゅん</button></p>
+                    </div>
+                </div>
+        
+        </div>
+     
+        <script>
+               function sound()
+                {
+                   
+                    // [ID:heeAudio]の音声ファイルを再生[play()]する
+                    var audioElm = document.getElementById( 'heeAudio' );
+
+                    // 初回以外だったら音声ファイルを巻き戻す
+                    if( typeof( audioElm.currentTime ) != 'undefined' )
+                    {
+                        audioElm.currentTime = 0;
+                    }
+                    audioElm.play();
+
+                    // カウンタ更新
+                    $.post('countup.php',{},{});
+                }
+
+        //　初期設定
+        $(function() 
+        {
+            var currentTime = parseInt(new Date().getTime() / (1000 * 5)) * 5;
+            var LastTime = 0;
+            var chart;
+            var gauge;
+            var gauge_Daily;
+            $.post("load.php",{},
+            function(data)
+            {
+                var leftRange = [0, 50];
+                var initData = [{ label: 'A', values: data.values, range: leftRange }];
+                LastTime = data.ServerTime;
+                
+                chart = $('#kyunGraph .epoch').epoch({
+                        type: 'time.line',
+                        range: {
+                            left: leftRange
+                        },
+                        data: initData,
+                        axes: ['left', 'right', 'bottom']
+                        });  
+
+                gauge = $('#gaugeChart').epoch({
+                    type: 'time.gauge',
+                    domain: [0, 50],
+                    format: function(v) { return parseInt(v) + ' cun'; },
+                    value: 0
+                    });
+                gauge_Daily = $('#gaugeChart_Daily').epoch({
+                    type: 'time.gauge',
+                    domain: [0, 200],
+                    format: function(v) { return parseInt(v) + ' cun'; },
+                    value: 0
+                    });
+                        
+                interval = setInterval(pushPoint, 1000);
+            });
+
+
+            var pushPoint = function() 
+            {
+                $.get("load.php",{LastTime : LastTime},
+                function(data)
+                {
+                    LastTime = data.ServerTime;
+                    for( let idx in data.values)
+                    {
+                        //chart.push();
+                        chart.push([data.values[idx]]);
+
+                    }
+
+                    gauge.update(data.NowCount);
+
+                    gauge_Daily.update(data.DayCount);
+                });
+            };
+
+            $('#kyunGraph button').on('click', function(e) {
+                $.post('countup.php',{},{});
+
+            });
+        });
+        </script>
+
+    </body>
+</html>

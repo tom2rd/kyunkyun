@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+<head>
+<title>♡キュンキュンボタン　サンプル</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
+<script src="js/epoch.min.js"></script>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/epoch.min.css">
+<link rel="stylesheet" type="text/css" href="css/kyunkyun.css">
+
+<style>
+/* ここはメニューには直接関係ない基本スタイル */
+body {
+background: #fff;
+color: #333;
+font-family: sans-serif;
+font-size: small;
+line-height: 1.5;
+margin: 0;
+padding: 0;
+}
+
+a {
+color: #22aacc;
+text-decoration: underline;
+}
+
+a:visited {
+color: #009999;
+}
+
+a:hover,
+a:active {
+color: #ff3366;
+text-decoration: underline;
+}
+
+.siteTitle {
+background: #000;
+font-size: 1em;
+height: 120px;
+margin: 0;
+overflow: hidden;
+padding: 10px;
+text-align: center;
+}
+
+.backEntry {
+background: #eee;
+border: 1px solid #ccc;
+border-radius: 10px;
+margin: 1em auto;
+padding: 2px 0;
+text-align: center;
+width: 15em;
+}
+
+.backEntry a {
+display: block;
+}
+
+article {
+padding: 0 1em 50px;
+}
+
+h1 {
+font-size: 1em;
+}
+
+.entry-title {
+font-size: 1.2em;
+}
+
+.sample {
+border: 1px solid #ddd;
+margin: 0 auto 30px;
+padding: 20px;
+width: 300px;
+}
+
+.sample form {
+margin-bottom: 50px;
+text-align: center;
+}
+
+/* ↓ここからへぇボタン関連のスタイル↓ */
+
+.sample #hee {
+height: 300px;
+margin: 0;
+padding: 0;
+-webkit-transform: rotate(-90deg);
+transform: rotate(-90deg);
+width: 300px;
+}
+
+.sample #renge {
+background: url(img/renge_back_light.png) no-repeat center bottom;
+height: 300px;
+margin: 0;
+padding: 0;
+}
+
+.sample #renge p {
+background: url(img/renge_back.png) no-repeat center bottom;
+height: 300px;
+margin: 0;
+padding: 0;
+}
+
+.sample label {
+display: block;
+padding-top: 50px;
+}
+
+/* へぇ数ごとの設定 */
+.sample #renge.hee0 {
+background-position: center 300px;
+}
+
+.sample #renge.hee1 {
+background-position: center 285px;
+}
+
+.sample #renge.hee2 {
+background-position: center 270px;
+}
+
+.sample #renge.hee3 {
+background-position: center 255px;
+}
+
+.sample #renge.hee4 {
+background-position: center 240px;
+}
+
+.sample #renge.hee5 {
+background-position: center 225px;
+}
+
+.sample #renge.hee6 {
+background-position: center 210px;
+}
+
+.sample #renge.hee7 {
+background-position: center 195px;
+}
+
+.sample #renge.hee8 {
+background-position: center 180px;
+}
+
+.sample #renge.hee9 {
+background-position: center 165px;
+}
+
+.sample #renge.hee10 {
+background-position: center 150px;
+}
+
+.sample #renge.hee11 {
+background-position: center 135px;
+}
+
+.sample #renge.hee12 {
+background-position: center 120px;
+}
+
+.sample #renge.hee13 {
+background-position: center 105px;
+}
+
+.sample #renge.hee14 {
+background-position: center 90px;
+}
+
+.sample #renge.hee15 {
+background-position: center 75px;
+}
+
+.sample #renge.hee16 {
+background-position: center 60px;
+}
+
+.sample #renge.hee17 {
+background-position: center 45px;
+}
+
+.sample #renge.hee18 {
+background-position: center 30px;
+}
+
+.sample #renge.hee19 {
+background-position: center 15px;
+}
+
+.sample #renge.hee20 {
+background-position: center bottom;
+}
+
+.Block{
+  display: inline-block;      /* インラインブロック要素にする */
+  padding:  20px;             /* 余白指定 */
+  vertical-align:  top;       /* 要素を上揃えにする */ 
+}
+</style>
+
+<!-- jQueryの読み込み -->
+
+<script>
+// へぇボタンを押す度の処理
+$(function(){
+
+  // 最初にゲージを0にして、音声ファイルを読み込み
+  $("#renge").addClass("hee0");
+  var audio = $("#heeAudio")[0];
+  // へぇボタンクリックごとの処理
+  $("label").click(function () {
+    // 押す度に range の value を 1ずつ増加させる
+    $.post('countup.php',{},{});
+    num = parseInt($("#hee").val());
+    add = 1;
+    $("#hee").val(num + add);
+    // 音声の再生
+    audio.load();
+    audio.play();
+    // class の付与
+    numC = $("#hee").val();
+    cls = "hee" + numC;
+    $("#renge").removeClass().addClass(cls);
+  });
+});
+</script>
+
+</head>
+<body>
+
+<header>
+<h1 class="siteTitle"><img src="https://tom2rd.sakura.ne.jp/hanakotech/wp-content/uploads/2019/08/1566312472n8jfm2ul10Ao5nQ1566312427-3.gif" alt="小平あたりでCivicTech" /></h1>
+</header>
+
+<p class="backEntry"><a href="https://tom2rd.sakura.ne.jp/hanakotech">小平あたりでCivicTech</a></p>
+ <p class="backEntry"> <a href="nami.html">NamiNami Ver</a></p>
+  <p class="backEntry"> <a href="yoppi1.html">Yoppi Ver1</a></p>
+  <p class="backEntry"> <a href="yoppi2.html">Yoppi Ver2</a></p>
+<article>
+
+<h1 class="entry-title">HTML5 バージョン キュンキュン♡ボタン サンプル</h1>
+
+<p>こちらの記事のコピーです <a href="http://hyper-text.org/archives/2013/05/html5_input_type_range_hee.shtml" target="_blank">HTML5 input type=&quot;range&quot; で作る 「へぇボタン」</a>」 をご覧ください。</p>
+
+</article>
+
+<!-- ↓ここからサンプル↓ -->
+
+<!-- ↓へぇボタンの HTML↓ -->
+<form>
+<div id="renge">
+<p><input type="range" name="hee" id="hee" min="0" max="20" value="0" /></p>
+</div>
+<label for="hee"><img src="img/hee.png" width="100" height="100" alt="へぇ" /></label>
+</form>
+<!-- ↑へぇボタンの HTML↑ -->
+
+<div class="audio">
+<audio src="audio/hee.mp3" id="heeAudio" controls="controls"><p>audio 要素に対応したブラウザでは「へぇ」の音声ファイルの再生が可能です。</p></audio>
+</div>
+
+</div>
+<div> 
+<!-- ↑ここまでサンプル↑ -->
+<div class="Block">
+  <P>今のキュンキュン数</P>
+  <div id="gaugeChart" class="epoch gauge-small"></div>  
+</div>
+<div class="Block">
+  <P>本日のキュンキュン</P>
+  <div id="gaugeChart_Daily" class="epoch gauge-small">
+
+  </div> 
+</div>
+
+<!-- Test 3 -->
+<div id="kyunGraph" class="kyunGraph">
+  <div class="epoch"></div>
+  <p><button>きゅんきゅん</button></p>
+</div>
+
+<script>
+
+//　初期設定
+$(function() 
+{
+    var currentTime = parseInt(new Date().getTime() / (1000 * 5)) * 5;
+    var LastTime = 0;
+    var chart;
+    var gauge;
+    var gauge_Daily;
+    $.post("load.php",{},
+    function(data)
+    {
+        var leftRange = [0, 50];
+        var initData = [{ label: 'A', values: data.values, range: leftRange }];
+        LastTime = data.ServerTime;
+        
+        chart = $('#kyunGraph .epoch').epoch({
+                type: 'time.line',
+                range: {
+                    left: leftRange
+                },
+                data: initData,
+                axes: ['left', 'right', 'bottom']
+                });  
+
+        gauge = $('#gaugeChart').epoch({
+            type: 'time.gauge',
+            domain: [0, 50],
+            format: function(v) { return parseInt(v) + ' cun'; },
+            value: 0
+            });
+        gauge_Daily = $('#gaugeChart_Daily').epoch({
+            type: 'time.gauge',
+            domain: [0, 200],
+            format: function(v) { return parseInt(v) + ' cun'; },
+            value: 0
+            });
+                
+        interval = setInterval(pushPoint, 1000);
+    });
+
+
+    var pushPoint = function() 
+    {
+        $.get("load.php",{LastTime : LastTime},
+        function(data)
+        {
+            LastTime = data.ServerTime;
+            for( let idx in data.values)
+            {
+                //chart.push();
+                chart.push([data.values[idx]]);
+
+            }
+
+            gauge.update(data.NowCount);
+
+            gauge_Daily.update(data.DayCount);
+        });
+    };
+
+    $('#kyunGraph button').on('click', function(e) {
+        $.post('countup.php',{},{});
+
+    });
+});
+</script>
+
+</body>
+</html>
