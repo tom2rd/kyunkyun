@@ -11,5 +11,7 @@ Github pagesで動かしてみる。
 
 https://tom2rd.github.io/kyunkyun/
 
+## カウンター付きメーターバージョン
+
 - [Meter Ver.](https://konohadou.tokyo/cuncun/tomi.html) Produced by naka さん　
 　
