@@ -128,7 +128,7 @@
 
         <!-- キュンキュンボタン -->
         <div id="QnnQnnbutton" onClick="kyunkyunCountUP()" >
-            <img id="kyunimg" src="img/kyunBtn.png"/>
+            <img id="kyunimg" src="img/kyunBtn.PNG"/>
             <div id="Gauge_Now" class="epoch gauge-small" ></div>
             <P>今のキュンキュン数</P>
         </div>
@@ -189,13 +189,13 @@
                     gauge = $('#Gauge_Now').epoch({
                         type: 'time.gauge',
                         domain: [0, 50],
-                        format: function(v) { return parseInt(v) + ' cun'; },
+                        format: function(v) { return parseInt(v) + ' キュン'; },
                         value: 0
                         });
                     gauge_Daily = $('#Gauge_Daily').epoch({
                         type: 'time.gauge',
                         domain: [0, 200],
-                        format: function(v) { return parseInt(v) + ' cun'; },
+                        format: function(v) { return parseInt(v) + ' キュン'; },
                         value: 0
                         });
                             
