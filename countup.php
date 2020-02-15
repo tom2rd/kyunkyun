@@ -4,10 +4,18 @@
 //$FrameCount = (60 * 60 * 3);  // 60秒　＊　60　分 * 3
 $FrameCount = (60);  // 60秒　＊　60　分 * 3
 
+$lockfilename = 'lock';
+//＊＊ロック用ファイルのオープン＊＊
+$lockfp = fopen($lockfilename,'w');
+//＊＊ロック用ファイルのロック＊＊
+flock($lockfp, LOCK_EX);
+
 
 //$nowTime = intdiv(time(), 5) * 5;           // 全て5の倍数で丸める
 $nowTime = intdiv(time(), 1);           // 全て5の倍数で丸める
 $TimeIndex = $nowTime % $FrameCount;  // 60秒　＊　60　分 * 3
+
+
 
 //　CounterXMLの読み込み
 $xml = simplexml_load_file('./Counter.xml');
@@ -53,5 +61,11 @@ if(count($DayCount) > 0 )
 
 
 $xml->saveXML('./Counter.xml');
+
+
+//＊＊ロック用ファイルのロックの開放＊＊
+flock($lockfp, LOCK_UN);
+//＊＊ロック用ファイルのクローズ＊＊
+fclose($lockfp);
 
 ?>
