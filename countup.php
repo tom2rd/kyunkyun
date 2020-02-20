@@ -1,21 +1,19 @@
 <?php   
 
 // XML保存するデータ数
+$FrameCount = (60);  // 60秒　
 //$FrameCount = (60 * 60 * 3);  // 60秒　＊　60　分 * 3
-$FrameCount = (60);  // 60秒　＊　60　分 * 3
+$nowTime = time();                      // 現在の秒数
+//$nowTime = intdiv(time(), 5) * 5;     // 全て5の倍数で丸める
 
-$lockfilename = 'lock';
+$TimeIndex = $nowTime % $FrameCount;    // 現在の書き込みIndexを計算
+
+//　排他スタート
+$lockfilename = 'lock'; //　排他用のファイル名
 //＊＊ロック用ファイルのオープン＊＊
 $lockfp = fopen($lockfilename,'w');
 //＊＊ロック用ファイルのロック＊＊
 flock($lockfp, LOCK_EX);
-
-
-//$nowTime = intdiv(time(), 5) * 5;           // 全て5の倍数で丸める
-$nowTime = intdiv(time(), 1);           // 全て5の倍数で丸める
-$TimeIndex = $nowTime % $FrameCount;  // 60秒　＊　60　分 * 3
-
-
 
 //　CounterXMLの読み込み
 $xml = simplexml_load_file('./Counter.xml');
@@ -25,16 +23,16 @@ if(count($TimeCount) > 0 )
     // Indexが合っていてもTimeが違う場合は、過去のデータなので0扱いにする。
     if((int)$TimeCount[0]["Time"] == (int)$nowTime)
     {
-        echo "カウントアップ";
+        //　すでに同じ時間のエレメントが存在する場合は、カウントアップ
         $TimeCount[0]["Value"] = (int)$TimeCount[0]["Value"] + 1;
     }else {
-        echo "カウントリセット time=".$TimeCount[0]["Time"]."nowTime=".$nowTime."index=".$TimeIndex;
+        //　エレメントは存在するが、時間が異なる場合は、時間を更新してカウントを１とする。
         $TimeCount[0]["Time"] = $nowTime;
         $TimeCount[0]["Value"] = 1;
     }
 }else 
 {
-    echo "ノード追加";
+    //　エレメントが存在しない場合は追加する、
     $SecRootItem = $xml->xpath('/Counter/Sec');
     $result = $SecRootItem[0]->addChild("TimeCount");
     $result[0]['Index'] = $TimeIndex;
@@ -42,24 +40,24 @@ if(count($TimeCount) > 0 )
     $result[0]['Value'] = 1;
 }
 
-$DayIndex = date('Ymd') ;           // 日付
+$DayIndex = date('Ymd') ;           // 本日付　例：20200220
 
 // デイリーのカウンター
 $DayCount = $xml->xpath('/Counter/Day/DayCount[@Index="'.($DayIndex).'"]');
 if(count($DayCount) > 0 )
 {
+    //　同一日付のカウンターが存在する場合は、カウントアップ
     $DayCount[0]["Value"] = (int)$DayCount[0]["Value"] + 1;
  }else 
 {
-    echo "ノード追加";
+    //　同一日付のカウンターが存在しない場合は、タグを作成してカウントを１とする。
     $SecRootItem = $xml->xpath('/Counter/Day');
     $result = $SecRootItem[0]->addChild("DayCount");
     $result[0]['Index'] = $DayIndex;
     $result[0]['Value'] = 1;
 }
 
-
-
+//　XMLの更新
 $xml->saveXML('./Counter.xml');
 
 
@@ -67,5 +65,7 @@ $xml->saveXML('./Counter.xml');
 flock($lockfp, LOCK_UN);
 //＊＊ロック用ファイルのクローズ＊＊
 fclose($lockfp);
+//　排他終了
+
 
 ?>

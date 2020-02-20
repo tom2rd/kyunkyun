@@ -2,15 +2,17 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <!--スマホでダブルクリックした時に拡大しないようにするためのメタ情報-->
         <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 
         
         <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        
+        <!-- svg処理ライブラリ epochを利用する為のベースライブラリ-->
         <script src="https://d3js.org/d3.v3.js" charset="utf-8"></script>
         <script src="js/epoch.min.js"></script>
-        
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
+                
         <link rel="stylesheet" type="text/css" href="css/epoch.min.css">
         <style>
             
@@ -20,24 +22,21 @@
 
             /*キュンキュンボタン*/
             #QnnQnnbutton {
-                width: 320px;
-                Height: 270px;
-                margin: 0 auto;
+                width: 320px;       /*幅*/
+                Height: 270px;      /*高さ*/
+                margin: 0 auto;     /*中央寄せ*/
 
                 position: relative;
-                /*padding: .65em 4em;*/
-        
-                /*
-                border: 1px solid #fe3276;
-                border-radius: 4px;
-                */
                 color: #fe3276;
+
                 text-decoration: none;
                 text-align: center;
                 vertical-align: middle;
                 -webkit-transition: .3s ease-in-out;
                 transition: .3s ease-in-out;
             }
+
+            /*キュンキュン動きを定義*/
             #QnnQnnbutton:active {
                 -webkit-animation: bounce 2s ease-in-out;
                 animation: bounce 2s ease-in-out;
@@ -63,16 +62,20 @@
                 /*display: inline-block;
                 vertical-align: middle;*/
             }
+
+            /*今のキュンキュンメーターの見た目変更*/
             #Gauge_Now .epoch .gauge .arc.outer {
                 stroke-width: 8px;
                 stroke:#fe3276;
             }
 
+            /*今のキュンキュンメーターの見た目変更*/
             #Gauge_Now .epoch .gauge .arc.inner {
                 stroke-width: 2px;
                 stroke: #fe3276;
             }
 
+            /*今のキュンキュンメーターの見た目変更*/
             #Gauge_Now .epoch .gauge .tick {
                 stroke-width: 3px;
                 stroke: #fe3276;
@@ -87,7 +90,7 @@
             }
 */
 
-            /*ボタンの画像*/
+            /*キュンキュンボタンの画像*/
             #kyunimg {
                 position: absolute;
                 zoom: 1;
@@ -96,21 +99,19 @@
                 left: 50%;
                 -webkit-transform : translateY(-50%);
                 transform : translate(-50%,-50%);
-                /*display: inline-block;
-                vertical-align: middle;*/
             }
             
             /* キュンキュンタイムライン */
             #TimeLineGraph .epoch {
-                width: 80％;
-                margin: 0 auto;             /*左右中央*/
+                width: 80％;               /* 幅が全体の80%になるように*/
+                margin: 0 auto;            /* 左右中央*/
                 vertical-align:  top;      /* 要素を上揃えにする */ 
                 height: 220px;
             }
 
             /*本日のキュンキュンカウントゲージエリア*/
             #Area_DailyCount{
-                text-align: center;
+                text-align: center;         /*タイトルを横中央に*/
             }            
 
             /*本日のキュンキュンカウントゲージ*/
@@ -165,18 +166,25 @@
             //　初期設定
             $(function() 
             {
-                var currentTime = parseInt(new Date().getTime() / (1000 * 5)) * 5;
-                var LastTime = 0;
-                var chart;
-                var gauge;
-                var gauge_Daily;
+                var LastTime = 0;   //　クライアントサイドで現在保持している最終時間保存
+                var chart;          //　タイムラインのエレメント参照
+                var gauge;          //　今のキュンキュンゲージのエレメント
+                var gauge_Daily;    //　今日のキュンキュンのエレメント
+
+                //　カウンタ情報を引数なし（全時間で取得）
                 $.post("load.php",{},
                 function(data)
                 {
-                    var leftRange = [0, 50];
-                    var initData = [{ label: 'A', values: data.values, range: leftRange }];
+                    //　load.phpの応答が帰って来た時のコールバック関数
+
+                    // 応答に含まれる最終時間を保存（次回の問い合わせに利用する）
                     LastTime = data.ServerTime;
                     
+                    //　タイムラインの初期化
+                    var leftRange = [0, 50];    //　縦軸の幅を設定
+                    var initData = [{ label: 'A', values: data.values, range: leftRange }];　//　ラインの情報を設定　ラベル名、　時系列データ、　レンジ
+                    
+                    //　タイムチャートを初期化
                     chart = $('#TimeLineGraph .epoch').epoch({
                             type: 'time.line',
                             range: {
@@ -186,20 +194,24 @@
                             axes: ['left', 'right', 'bottom']
                             });  
 
+                    //　現在のキュンキュンゲージを初期化
                     gauge = $('#Gauge_Now').epoch({
                         type: 'time.gauge',
-                        domain: [0, 50],
-                        format: function(v) { return parseInt(v) + ' キュン'; },
+                        domain: [0, 50],        //　ゲージmaxを指定
+                        format: function(v) { return parseInt(v) + ' キュン'; },    //　メータテキストのフォーマット
                         value: 0
                         });
+
+                    //　本日ののキュンキュンゲージを初期化
                     gauge_Daily = $('#Gauge_Daily').epoch({
                         type: 'time.gauge',
-                        domain: [0, 200],
-                        format: function(v) { return parseInt(v) + ' キュン'; },
+                        domain: [0, 200],       //　ゲージマックスを指定
+                        format: function(v) { return parseInt(v) + ' キュン'; },　　//　メータテキストのフォーマット
                         value: 0
                         });
-                            
-                    interval = setInterval(pushPoint, 1000);
+                    
+                    //　更新の為にタイマーのコールバックを設定
+                    interval = setInterval(pushPoint, 1000);    //　一秒
                 });
 
                 //　インターバル処理から呼ばれる関数　毎秒実行
@@ -209,14 +221,17 @@
                     $.get("load.php",{LastTime : LastTime},
                     function(data)
                     {
+                        //　１秒ごとのデータがあったらチャートに追加
                         LastTime = data.ServerTime;
                         for( let idx in data.values)
                         {
-                            //chart.push();
                             chart.push([data.values[idx]]);
                         }
 
+                        //　現在のカウンタ値を設定
                         gauge.update(data.NowCount);
+                        
+                        //　本日のカウンタ値を設定
                         gauge_Daily.update(data.DayCount);
                     });
                 };
