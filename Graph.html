@@ -168,7 +168,7 @@
             {
                 var LastTime = 0;   //　クライアントサイドで現在保持している最終時間保存
                 var chart;          //　タイムラインのエレメント参照
-                var gauge;          //　今のキュンキュンゲージのエレメント
+                var gauge_now;          //　今のキュンキュンゲージのエレメント
                 var gauge_Daily;    //　今日のキュンキュンのエレメント
 
                 //　カウンタ情報を引数なし（全時間で取得）
@@ -195,7 +195,7 @@
                             });  
 
                     //　現在のキュンキュンゲージを初期化
-                    gauge = $('#Gauge_Now').epoch({
+                    gauge_now = $('#Gauge_Now').epoch({
                         type: 'time.gauge',
                         domain: [0, 50],        //　ゲージmaxを指定
                         format: function(v) { return parseInt(v) + ' キュン'; },    //　メータテキストのフォーマット
@@ -229,8 +229,8 @@
                         }
 
                         //　現在のカウンタ値を設定
-                        gauge.update(data.NowCount);
-                        
+                        gauge_now.update(data.NowCount);
+
                         //　本日のカウンタ値を設定
                         gauge_Daily.update(data.DayCount);
                     });
