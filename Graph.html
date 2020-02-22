@@ -156,51 +156,16 @@
         <!-- 本日のキュンキュンボタン -->
         <div id="Area_DailyCount">
             <P>本日のキュンキュン</P>
+            <div id="Gauge_Daily" class="epoch gauge-small"></div>
         </div>
 
         <!-- 監視ボタン -->
         <div id="MonitorButton" onClick="OnMonitorButton()">
-            他の人のキュンキュンをならす
+            他の人のキュンキュンを鳴らすモードに変更
         </div>
 
         <script>
-            //　キュンきゅんを再生してCountUPのWEBサービスをコール
-            function kyunkyunCountUP()
-            {
-                // [ID:heeAudio]の音声ファイルを再生[play()]する
-                var audioElm = document.getElementById( 'heeAudio' );
-
-                // 初回以外だったら音声ファイルを巻き戻す
-                if( typeof( audioElm.currentTime ) != 'undefined' )
-                {
-                    audioElm.currentTime = 0;
-                }
-
-                // 他人のキュンキュンをならす状態だと自分のキュンキュンで二倍なってしまうので再生しない
-                if(MonitorFlg == false)
-                {
-                    audioElm.play();
-                }
-
-                // カウンタ更新
-                $.post('countup.php',{},{});
-            }
-
-            var MonitorFlg = false;
-            function　OnMonitorButton()
-            {
-                // [ID:heeAudio]の音声ファイルを再生[play()]する
-                var Caption = document.getElementById( 'MonitorButton' );
-                if(MonitorFlg == true)
-                {
-                    MonitorFlg = false;
-                    Caption.innerText = "他の人のキュンキュンをならす";
-                }else
-                {
-                    MonitorFlg = true;
-                    Caption.innerText = "他の人のキュンキュンをならさない";
-                }
-            }
+            var MonitorFlg = false; //　他人のキュンキュンを鳴らすモードフラグ
 
             //　初期設定
             $(function() 
@@ -302,6 +267,47 @@
 
             
             });
+
+            //　キュンきゅんを再生してCountUPのWEBサービスをコール
+            function kyunkyunCountUP()
+            {
+                // [ID:heeAudio]の音声ファイルを再生[play()]する
+                var audioElm = document.getElementById( 'heeAudio' );
+
+                // 初回以外だったら音声ファイルを巻き戻す
+                if( typeof( audioElm.currentTime ) != 'undefined' )
+                {
+                    audioElm.currentTime = 0;
+                }
+
+                // 他人のキュンキュンをならす状態だと自分のキュンキュンで二倍なってしまうので再生しない
+                if(MonitorFlg == false)
+                {
+                    audioElm.play();
+                }
+
+                // カウンタ更新
+                $.post('countup.php',{},{});
+            }
+
+            // 他人のキュンキュン監視機能の有効無効ボタン
+            function　OnMonitorButton()
+            {
+                //　ボタンのDIVタグを取得
+                var Caption = document.getElementById( 'MonitorButton' );
+                
+                //　Monitorフラグの反転とCaptionを変更
+                if(MonitorFlg == true)
+                {
+                    MonitorFlg = false;
+                    Caption.innerText = "他の人のキュンキュンを鳴らすモードに変更";
+                }else
+                {
+                    MonitorFlg = true;
+                    Caption.innerText = "他の人のキュンキュンを鳴らさないモードに変更";
+                }
+            }
+
 
             //　モニター用再生関数
             function kyuntimer()
