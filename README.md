@@ -14,4 +14,6 @@ https://tom2rd.github.io/kyunkyun/
 ## カウンター付きメーターバージョン
 
 - [Meter Ver.](https://konohadou.tokyo/cuncun/tomi.html) Produced by naka さん　
+
+- [最新版](https://tom2rd.sakura.ne.jp/hanakotech/cyun/kyunkyun/Graph.html) Produced by naka さん
 　
