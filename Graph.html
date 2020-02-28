@@ -101,6 +101,19 @@
                 transform : translate(-50%,-50%);
             }
             
+             /*キュンキュン君の画像*/
+            #kyunkun {
+                height: 200px;
+                width: auto;
+                position: absolute;
+                zoom: 1;
+                /*中央に来るように*/
+                top: 50%;
+                left: 50%;
+                -webkit-transform : translateY(-50%);
+                transform : translate(-50%,-50%);
+            }
+
             /* キュンキュンタイムライン */
             #TimeLineGraph .epoch {
                 width: 80％;               /* 幅が全体の80%になるように*/
@@ -118,9 +131,10 @@
             #Gauge_Daily{
                 margin: 0 auto;             /*左右中央*/
             }            
+
             /*本日のキュンキュンカウントゲージエリア*/
             #MonitorButton{
-                margin: 0 auto;            /* 左右中央*/
+                margin: 5px auto;            /* 左右中央*/
                 text-align: center;         /*タイトルを横中央に*/
                 font-weight:bold;
                 text-decoration:none;
@@ -132,6 +146,27 @@
                 border-radius:25px;
             }                
             
+
+            .title{
+                margin: 5px 5px;            /* 左右中央*/
+                color:#fe3276;
+            }
+            /*音声変更ボタン*/
+            .VoiceButton{
+                margin: 5px 5px;            /* 左右中央*/
+                width: 150px;
+  
+                display: inline-block;      /* インラインブロック要素にする */
+                text-align: center;         /*タイトルを横中央に*/
+                font-weight:bold;
+                text-decoration:none;
+                text-align:center;
+                padding:8px 0 10px;
+                color:#fff;
+                background-color:#fe3276;
+                border-radius:25px;
+            }                
+
             </style>
     </head>
     <body>
@@ -140,16 +175,18 @@
         <div id="sound-file"　class="audio">
             <audio src="audio/hee.mp3" id="heeAudio"><p>audio 要素に対応したブラウザでは「へぇ」の音声ファイルの再生が可能です。</p></audio>
         </div>
-
+ 
         <!-- キュンキュンボタン -->
         <div id="QnnQnnbutton" onClick="kyunkyunCountUP()" >
             <img id="kyunimg" src="img/kyunBtn.PNG"/>
             <div id="Gauge_Now" class="epoch gauge-small" ></div>
             <P>今のキュンキュン数</P>
         </div>
-
+        <!-- キュン君-->
+ 
         <!-- 時系列Graph -->
         <div id="TimeLineGraph" >
+            <img id="kyunkun" src="img/kyunkun0.PNG"/>            
             <div class="epoch"></div>
         </div>
 
@@ -164,6 +201,22 @@
             他の人のキュンキュンを鳴らすモードに変更
         </div>
 
+        <!-- 音声変更 -->
+        <span class="title">音声変更</span>
+        <div>
+            <div class="VoiceButton" onClick="(function(){ document.getElementById( 'heeAudio' ).src = 'audio/hee.mp3';})()">
+                キュン君
+            </div>
+            <div class="VoiceButton" onClick="(function(){ document.getElementById( 'heeAudio' ).src = 'audio/yoppi1hee.mp4';})()">
+                よっぴさん
+            </div>
+            <div class="VoiceButton" onClick="(function(){ document.getElementById( 'heeAudio' ).src = 'audio/yoppi2hee.mp4';})()">
+                よっぴさん２
+            </div>
+            <div class="VoiceButton" onClick="(function(){ document.getElementById( 'heeAudio' ).src = 'audio/namihee.mp4';})()">
+             なみさん
+            </div>    
+        </div>
         <script>
             var MonitorFlg = false; //　他人のキュンキュンを鳴らすモードフラグ
 
@@ -234,6 +287,31 @@
 
                         //　現在のカウンタ値を設定
                         gauge_now.update(data.NowCount);
+                        
+                        if(data.NowCount == 0)
+                        {
+                            document.getElementById( 'kyunkun' ).src = "img/kyunkun0.PNG";
+                        }else if(data.NowCount < 10)
+                        {
+                            document.getElementById( 'kyunkun' ).src = "img/kyunkun10.PNG";
+                        }else if(data.NowCount < 20)
+                        {
+                            document.getElementById( 'kyunkun' ).src = "img/kyunkun20.PNG";
+                        }else if(data.NowCount < 30)
+                        {
+                            document.getElementById( 'kyunkun' ).src = "img/kyunkun30.PNG";
+                        }else if(data.NowCount < 40)
+                        {
+                            document.getElementById( 'kyunkun' ).src = "img/kyunkun40.PNG";
+                        }else if(data.NowCount < 80)
+                        {
+                            document.getElementById( 'kyunkun' ).src = "img/kyunkun50.PNG";
+                        }else 
+                        {                        
+                            document.getElementById( 'kyunkun' ).src = "img/kyunkun80.PNG";
+                        }
+
+
 
                         //　本日のカウンタ値を設定
                         gauge_Daily.update(data.DayCount);
