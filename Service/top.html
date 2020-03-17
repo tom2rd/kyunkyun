@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <!--スマホでダブルクリックした時に拡大しないようにするためのメタ情報-->
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">       
+        
+        <style>
+            
+            body {
+                font-family: helvetica;
+            }
+            .Main{
+                color: #fe3276;
+
+                text-decoration: none;
+                text-align: center;
+            }
+
+            .center_iframe{
+                /*中央寄せ設定*/
+                display: block;
+                margin: auto;
+                border: none;       /*境界線削除*/
+                overflow: hidden;
+            }  
+
+        </style>
+    </head>
+    <body>
+        <div class="Main">
+            <p>今のキュンキュン数</p>
+            <iframe class="center_iframe" src="./kyunkyunButton.php?id=ogjin&max=10"  width="320px" Height="270px" scrolling="no"></iframe>
+            <iframe class="center_iframe" src="./timeline.php?id=ogjin&height=220&max=10"  width="80%" Height="230px" scrolling="no"></iframe>
+            <p>今のキュンキュン</p>
+            <iframe class="center_iframe" src="./dailycounter.php?id=ogjin&max=10"  width="80%" Height="270px" scrolling="no"></iframe>
+        </div>
+
+    </body>
+</html>
