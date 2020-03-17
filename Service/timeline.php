@@ -53,7 +53,7 @@
         </div>
 
         <script>
-            var CounterID = "<?php echo $_GET['id']; ?>";
+            var CounterID = "<?php echo $CounterID; ?>";
 
             //　初期設定
             $(function() 
