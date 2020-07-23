@@ -9,7 +9,14 @@
 
 Github pagesで動かしてみる。
 
-https://tom2rd.github.io/kyunkyun/
+- https://tom2rd.github.io/kyunkyun/
+
+FMプラプラで聞きながらキュンキュンボタンを押す  
+- https://tom2rd.github.io/kyunkyun/kyunkynpura.html
+- https://tom2rd.github.io/kyunkyun/kyunkynpura2.html
+
+
+
 
 ## カウンター付きメーターバージョン
 
